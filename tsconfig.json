@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"lib": ["ESNext"],
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"target": "ESNext",
+		"outDir": "dist",
+		"sourceMap": true,
+		"declaration": true,
+		"rootDir": "src"
+	},
+	"exclude": ["dist", "**/*.test.*"]
+}

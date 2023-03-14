@@ -1,0 +1,57 @@
+{
+	"name": "zodcli",
+	"version": "0.0.1",
+	"description": "A CLI parser built with Zod.",
+	"type": "module",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"prettier": "npx prettier --ignore-unknown --ignore-path=.gitignore .",
+		"lint:check": "npm run prettier -- --check",
+		"lint:fix": "npm run prettier -- --write",
+		"test": "npx vitest",
+		"build": "npx tsc",
+		"prepare": "npm run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/GregBrimble/zodcli.git"
+	},
+	"keywords": [
+		"zod",
+		"cli",
+		"command-line",
+		"argv",
+		"parser",
+		"typescript"
+	],
+	"author": {
+		"name": "Greg Brimble",
+		"email": "developer@gregbrimble.com",
+		"url": "https://gregbrimble.com/"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/GregBrimble/zodcli/issues"
+	},
+	"homepage": "https://github.com/GregBrimble/zodcli#readme",
+	"volta": {
+		"node": "16.19.1"
+	},
+	"dependencies": {
+		"typescript": "^4.9.5"
+	},
+	"peerDependencies": {
+		"zod": "^3.21.4"
+	},
+	"devDependencies": {
+		"@types/node": "^18.15.3",
+		"prettier": "^2.8.4",
+		"prettier-plugin-organize-imports": "^3.2.2",
+		"tsm": "^2.3.0",
+		"vitest": "^0.29.2"
+	}
+}
