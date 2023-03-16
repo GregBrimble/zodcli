@@ -113,7 +113,9 @@ type SomeObject<T> = {
 };
 
 export const argumentParser = <
-	// @ts-expect-error
+	// @ts-ignore
+	// TS2589: Type instantiation is excessively deep and possibly infinite.
+	// It doesn't like the SupportedZodTypes monster.
 	Options extends ZodObjectWithOnlyPropertiesOfCamelCaseLetters<
 		Options extends ZodObject<
 			{
