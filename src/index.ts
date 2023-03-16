@@ -1,6 +1,5 @@
 import {
 	AnyZodObject,
-	TypeOf,
 	z,
 	ZodArray,
 	ZodDefault,
@@ -70,19 +69,30 @@ type ObjectWithPropertiesOfCamelCaseLetters<T> = {
 	[K in keyof T as CamelCaseLetters<string & K>]: T[K];
 };
 
+type ObjectWithPropertiesOfLowercaseLetters<T> = {
+	[K in keyof T as OnlyLowercaseLetters<string & K>]: T[K];
+};
+
 type ObjectWithPropertiesNotInAnother<T, U> = {
 	[K in keyof T as K extends keyof U ? never : K]: T[K];
 };
 
-type ZodObjectWithTheseExplicitProperties<
+type ObjectWithOnlyTheseProperties<T, U extends keyof T> = Pick<T, U> &
+	Record<Exclude<keyof T, U>, never>;
+
+type ZodObjectWithOnlyTheseProperties<
 	T extends AnyZodObject,
 	U extends PropertyKey
-> = ZodObject<
-	Pick<T["shape"], U> & Record<Exclude<keyof T["shape"], U>, never>
->;
+> = ZodObject<ObjectWithOnlyTheseProperties<T["shape"], U>>;
 
-type ZodObjectWithPropertiesOfCamelCaseLetters<T extends AnyZodObject> =
-	ZodObjectWithTheseExplicitProperties<
+type ObjectWithOnlyPropertiesOfLowercaseLetters<T extends any> =
+	ObjectWithOnlyTheseProperties<
+		T,
+		keyof ObjectWithPropertiesOfLowercaseLetters<T>
+	>;
+
+type ZodObjectWithOnlyPropertiesOfCamelCaseLetters<T extends AnyZodObject> =
+	ZodObjectWithOnlyTheseProperties<
 		T,
 		keyof ObjectWithPropertiesOfCamelCaseLetters<T["shape"]>
 	>;
@@ -98,9 +108,13 @@ type SupportedZodTypes =
 	| ZodOptional<SupportedZodTypes>
 	| ZodDefault<SupportedZodTypes>;
 
+type SomeObject<T> = {
+	[K in keyof T]: T[K];
+};
+
 export const argumentParser = <
-	// @ts-ignore
-	Options extends ZodObjectWithPropertiesOfCamelCaseLetters<
+	// @ts-expect-error
+	Options extends ZodObjectWithOnlyPropertiesOfCamelCaseLetters<
 		Options extends ZodObject<
 			{
 				[key: PropertyKey]: SupportedZodTypes;
@@ -109,15 +123,18 @@ export const argumentParser = <
 		>
 			? Options
 			: never
+	>,
+	Aliases extends SomeObject<
+		Aliases extends ObjectWithOnlyPropertiesOfLowercaseLetters<Aliases>
+			? { [key: PropertyKey]: string & keyof Options["shape"] }
+			: never
 	>
 >({
 	options,
 	aliases,
 }: {
 	options: Options;
-	aliases?: {
-		[alias: OnlyLowercaseLetters<string>]: string & keyof TypeOf<Options>;
-	};
+	aliases?: Aliases;
 }) => {
 	return z.array(z.string()).transform((argv, ctx) => {
 		const rawResults: Record<string, string[]> = {};

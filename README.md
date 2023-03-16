@@ -241,5 +241,5 @@ console.log(result);
 - [ ] Commands support
 - [ ] Positionals support
 - [ ] Object support
-- [ ] Strict typing of aliases
+- [x] Strict typing of aliases
 - [ ] Improve optionality/booleans
