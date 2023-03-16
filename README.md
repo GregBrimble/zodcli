@@ -47,7 +47,7 @@ console.log(
 
 `options` is a required property and **must** have a value of a strict Zod object (`z.object({}).strict()`). This ensures that any unrecognized arguments are rejected.
 
-- All properties **must** be in [`camelCase`](https://en.wikipedia.org/wiki/Camel_case) and be exclusively composed of a-z characters. For example:
+- All properties **must** be in ['camelCase'](https://en.wikipedia.org/wiki/Camel_case) and be exclusively composed of a-z characters. For example:
 
   - Valid:
     - `foo`
@@ -58,7 +58,7 @@ console.log(
     - `5`
     - `a5`
 
-  When parsed, '--snake-case' arguments are converted to their respective 'camelCase' properties.
+  When parsed, ['--kebab-case'](https://en.wikipedia.org/wiki/Letter_case#Kebab_case) arguments are converted to their respective 'camelCase' properties.
 
   For example:
 
@@ -162,7 +162,7 @@ console.log(result);
 // { foo: 'bar' }
 ```
 
-Or, to make all options optional, you can use `.partial()` on the object. For example:
+Or, to make all options optional, you can use [`.partial()`](https://zod.dev/?id=partial) on the object. For example:
 
 ```ts
 import { z } from "zod";
