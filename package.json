@@ -1,9 +1,9 @@
 {
 	"name": "zodcli",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "A CLI parser built with Zod.",
 	"type": "module",
-	"module": "./dist/index.js",
+	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"files": [
 		"dist"
