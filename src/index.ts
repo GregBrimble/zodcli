@@ -155,7 +155,7 @@ export const argumentParser = <
 					const kebabCaseKey = parts[0];
 					value = parts[1] ?? null;
 
-					if (kebabCaseKey.match(/^[^a-z-]$/)) {
+					if (kebabCaseKey.match(/[^a-z-]/)) {
 						// Unexpected non-lowercase characters in the argument name.
 						unknownKeys.push(arg);
 						continue;
@@ -170,7 +170,7 @@ export const argumentParser = <
 					const alias = parts[0];
 					value = parts[1] ?? null;
 
-					if (alias.match(/^[^a-z]$/)) {
+					if (alias.match(/[^a-z]/)) {
 						// Unexpected non-lowercase characters in the argument name.
 						unknownKeys.push(arg);
 						continue;
@@ -223,7 +223,10 @@ export const argumentParser = <
 			if ("unwrap" in zodType) {
 				zodType = zodType.unwrap();
 			}
-			const isSupposedToBeAnArray = zodType instanceof z.ZodArray;
+			if (zodType instanceof ZodDefault && "innerType" in zodType._def) {
+				zodType = zodType._def.innerType;
+			}
+			const isSupposedToBeAnArray = zodType instanceof ZodArray;
 			if (!isSupposedToBeAnArray && rawResults[key].length > 1) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,

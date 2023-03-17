@@ -316,22 +316,59 @@ describe("argumentParser", () => {
 						.strict(),
 				}).parse([])
 			).toEqual({ foo: false });
+		});
+	});
+
+	describe("arrays", () => {
+		it("parses arrays", ({ expect }) => {
 			expect(
 				argumentParser({
 					options: z
 						.object({
-							foo: z
-								.union([
-									z.literal("true").transform(() => true),
-									z.literal("false").transform(() => false),
-									z.null().transform(() => true),
-								])
-								.default("false"),
+							foo: z.array(z.string()).optional(),
 						})
-						.partial()
 						.strict(),
-				}).parse([])
-			).toEqual({ foo: false });
+				}).parse(["--foo=bar"])
+			).toEqual({ foo: ["bar"] });
+			expect(
+				argumentParser({
+					options: z
+						.object({
+							foo: z.array(z.string()).optional(),
+						})
+						.strict(),
+				}).parse(["--foo=bar", "--foo=boo"])
+			).toEqual({ foo: ["bar", "boo"] });
+		});
+
+		it("errors when multiple values are given for non-array types", ({
+			expect,
+		}) => {
+			expect(() =>
+				argumentParser({
+					options: z
+						.object({
+							foo: z.string().optional(),
+						})
+						.strict(),
+				}).parse(["--foo=bar", "--foo=boo"])
+			).toThrow(ZodError);
+		});
+	});
+
+	describe.skip.todo("objects", () => {
+		it("parses objects", ({ expect }) => {
+			expect(
+				argumentParser({
+					options: z
+						.object({
+							foo: z.object({
+								bar: z.string(),
+							}),
+						})
+						.strict(),
+				}).parse(["--foo.bar=boo"])
+			).toEqual({ foo: { bar: "boo" } });
 		});
 	});
 });
