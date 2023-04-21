@@ -237,7 +237,8 @@ console.log(result);
 
 ## Roadmap
 
-- [ ] Help message
+- [x] Help message
+- [x] Error messaging
 - [ ] Commands support
 - [ ] Positionals support
 - [ ] Object support

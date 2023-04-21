@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import { z, ZodError } from "zod";
-import { argumentParser } from ".";
+import { argumentParser, formatError, generateHelpMessage } from ".";
 
 describe("argumentParser", () => {
 	it("errors for mis-matched options", ({ expect }) => {
@@ -356,19 +356,57 @@ describe("argumentParser", () => {
 		});
 	});
 
-	describe.skip.todo("objects", () => {
-		it("parses objects", ({ expect }) => {
-			expect(
-				argumentParser({
-					options: z
-						.object({
-							foo: z.object({
-								bar: z.string(),
-							}),
-						})
-						.strict(),
-				}).parse(["--foo.bar=boo"])
-			).toEqual({ foo: { bar: "boo" } });
+	// describe.skip.todo("objects", () => {
+	// 	it("parses objects", ({ expect }) => {
+	// 		expect(
+	// 			argumentParser({
+	// 				options: z
+	// 					.object({
+	// 						foo: z.object({
+	// 							bar: z.string(),
+	// 						}),
+	// 					})
+	// 					.strict(),
+	// 			}).parse(["--foo.bar=boo"])
+	// 		).toEqual({ foo: { bar: "boo" } });
+	// 	});
+	// });
+});
+
+describe("formatError", () => {
+	it("creates a colorized string with error messages", ({ expect }) => {
+		expect(
+			formatError(
+				new ZodError([
+					{ code: z.ZodIssueCode.custom, message: "FOO", path: [] },
+					{ code: z.ZodIssueCode.custom, message: "bar", path: [] },
+				])
+			)
+		).toMatchInlineSnapshot(`
+			"[41m[1m ERROR [22m[49m FOO
+			[41m[1m ERROR [22m[49m bar"
+		`);
+	});
+});
+
+describe("generateHelpMessage", () => {
+	it("creates a colorized string with error messages", ({ expect }) => {
+		const result = generateHelpMessage({
+			options: z
+				.object({
+					foo: z.string().default("bar").describe("cat"),
+					dogbat: z.boolean().optional(),
+				})
+				.strict(),
+			aliases: {
+				f: "foo",
+			},
 		});
+
+		expect(result).toMatchInlineSnapshot(`
+			"Options:
+			 -f, --foo       cat [string] (default: bar)
+			     --dogbat        [boolean]"
+		`);
 	});
 });
