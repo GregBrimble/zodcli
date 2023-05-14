@@ -25,7 +25,7 @@ You can get CLI arguments passed to the script by using `process.argv.slice(2)`:
 // ./cli.js
 
 import { z } from "zod";
-import { argumentParser } from "./dist/index.js";
+import { argumentParser } from "zodcli";
 
 console.log(
 	argumentParser({ options: z.object({ foo: z.string() }).strict() }).parse(
